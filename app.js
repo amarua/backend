@@ -7,47 +7,37 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var app = express();
-//my code
+//my code--------------------------------------------
+app.use(express.json());
 var test =require('./routes/test');
-const mysql=require('mysql');
+var Router=require('./routes/Router')
+var db= require('./db');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-
-//Database:
-const db=mysql.createConnection({
-  host:'localhost',
-  port:3306,
-  user:'newuser',
-  database:'testing',
-  password:'password'
-})
 db.connect((err)=>{
   if(err){
     console.log(err);
     throw err;
     return false;
   }
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+});
+const sessionstore= new MySQLStore({
+  expansion: (1825* 86400*1000),
+  endConnectionclose:false
+},db);
+app.use(session({
+    key:'44235fhafh982f31f31c112rc1rc',
+    secret:'f23c42c4c34c2v3v25v235c25c43',
+    store:sessionstore,
+    resave:false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge:(1825* 86400*1000),
+        httpOnly:false
+    }
+}));
+new Router(app,db);
+//------------------------------------------
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

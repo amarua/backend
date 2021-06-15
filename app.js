@@ -14,13 +14,12 @@ var Router=require('./routes/Router')
 var db= require('./db');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-db.connect((err)=>{
-  if(err){
-    console.log(err);
-    throw err;
-    return false;
-  }
-});
+// db.connect((err)=>{
+//   if(err){
+//     console.log(err);
+//     throw err;
+//   }
+// });
 const sessionstore= new MySQLStore({
   expansion: (1825* 86400*1000),
   endConnectionclose:false

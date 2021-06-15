@@ -4,7 +4,11 @@ class Router {
         this.login(app,db);
         this.logout(app,db);
         this.isLoggedIn(app,db);
+        this.getborrowers(app,db);
+        this.addborrower(app,db);
+        this.addbook(app,db);
     }
+
     login(app,db){
         app.post('/login',(req,res)=>{
             let username =req.body.username.toLowerCase();
@@ -38,6 +42,69 @@ class Router {
                 success:true,
                 msg:'Login Success'
             })
+        })
+    }
+    getborrowers(app,db){
+        app.post('/getborrowers',async (req,res)=>{
+            console.log('requesting for borrowers');
+            let msg =[];
+            await db.query(
+                "select * from borrowers",
+                (err, result) => {
+                  if (err) throw err;
+                  //console.log(result);
+                  res.json({
+                    success:true,
+                    msg: result
+                })
+                }
+              );
+            
+        })
+    }
+
+    addborrower(app,db){
+        app.post('/addborrower',async (req,res)=>{
+            console.log('requesting to add borrower');
+            const name = req.body.name;
+            const address = req.body.address;
+            const phn = req.body.phn;
+            await db.query(
+                `insert into borrowers (name, address, phn) values (? ,? ,?)`,
+                [name,address,phn],
+                (err, result) => {
+                  if (err) throw err;
+                  console.log(result);
+                  res.json({
+                    success:true
+                })
+                }
+              );
+            
+        })
+    }
+
+    addbook(app,db){
+        app.post('/addbook',async (req,res)=>{
+            console.log('requesting to add borrower');
+            const name = req.body.name;
+            const author = req.body.author;
+            const yop = req.body.yop;
+            const publisher = req.body.publisher;
+            const quantity= req.body.quantity;
+            const avaliable = req.body.quantity;    //time of adding avaliableis same as quantity
+            await db.query(
+                `insert into books (name, author, yop, publisher, quantity, avaliable) values (? ,? ,? ,? ,? ,?)`,
+                [name,author,yop,publisher,quantity,avaliable],
+                (err, result) => {
+                  if (err) throw err;
+                  console.log(result);
+                  res.json({
+                    success:true
+                })
+                }
+              );
+            
         })
     }
 }

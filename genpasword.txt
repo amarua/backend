@@ -1,3 +1,13 @@
 $2b$10$cg0htgFh8q/2YgYha8zRsuDyBm54.CMKdbmfaqtB69.2UMlpXVERC
 
 for 1234
+
+
+for making grand permission in mysql to localhost:
+
+
+CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+
+GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
+
+SHOW GRANTS FOR 'newuser'@'localhost';

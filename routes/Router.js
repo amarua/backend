@@ -5,8 +5,11 @@ class Router {
         this.logout(app,db);
         this.isLoggedIn(app,db);
         this.getborrowers(app,db);
+        this.getbooks(app,db);
         this.addborrower(app,db);
         this.addbook(app,db);
+        this.editbook(app,db);
+        this.editborrower(app,db);
     }
 
     login(app,db){
@@ -47,7 +50,7 @@ class Router {
     getborrowers(app,db){
         app.post('/getborrowers',async (req,res)=>{
             console.log('requesting for borrowers');
-            let msg =[];
+            //let msg =[];
             await db.query(
                 "select * from borrowers",
                 (err, result) => {
@@ -74,7 +77,7 @@ class Router {
                 [name,address,phn],
                 (err, result) => {
                   if (err) throw err;
-                  console.log(result);
+                  //console.log(result);
                   res.json({
                     success:true
                 })
@@ -84,6 +87,24 @@ class Router {
         })
     }
 
+    getbooks(app,db){
+        app.post('/getbooks',async (req,res)=>{
+            console.log('requesting for books');
+            //let msg =[];
+            await db.query(
+                "select * from books",
+                (err, result) => {
+                  if (err) throw err;
+                  //console.log(result);
+                  res.json({
+                    success:true,
+                    msg: result
+                })
+                }
+              );
+            
+        })
+    }
     addbook(app,db){
         app.post('/addbook',async (req,res)=>{
             console.log('requesting to add borrower');
@@ -98,7 +119,47 @@ class Router {
                 [name,author,yop,publisher,quantity,avaliable],
                 (err, result) => {
                   if (err) throw err;
-                  console.log(result);
+                  //console.log(result);
+                  res.json({
+                    success:true
+                })
+                }
+              );
+            
+        })
+    }
+    editbook(app,db){
+        app.post('/editbook',async (req,res)=>{
+            console.log('requesting to edit book');
+            const id=   req.body.id;
+            const name = req.body.name;
+            const author = req.body.author;
+            const yop = req.body.yop;
+            const publisher = req.body.publisher;
+            await db.query(
+                `update books set name=?, author=?, yop=?, publisher=?  where id=?`,
+                [name,author,yop,publisher,id],
+                (err, result) => {
+                  if (err) throw err;
+                  //console.log(result);
+                  res.json({
+                    success:true
+                })
+                }
+              );
+            
+        })
+    }
+    editborrower(app,db){
+        app.post('/editborrower',async (req,res)=>{
+            console.log('requesting to edit borrower');
+            const {id,name,address,phn}=req.body;
+            await db.query(
+                `update borrowers set name=(?), address=(?), phn=(?)  where id=(?)`,
+                [name,address,phn,id],
+                (err, result) => {
+                  if (err) throw err;
+                  //console.log(result);
                   res.json({
                     success:true
                 })

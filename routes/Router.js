@@ -69,11 +69,11 @@ class Router {
     addborrower(app,db){
         app.post('/addborrower',async (req,res)=>{
             console.log('requesting to add borrower');
-            const name = req.body.name;
+            const name = req.body.borrower_name;
             const address = req.body.address;
             const phn = req.body.phn;
             await db.query(
-                `insert into borrowers (name, address, phn) values (? ,? ,?)`,
+                `insert into borrowers (borrower_name, address, phn) values (? ,? ,?)`,
                 [name,address,phn],
                 (err, result) => {
                   if (err) throw err;
@@ -108,14 +108,14 @@ class Router {
     addbook(app,db){
         app.post('/addbook',async (req,res)=>{
             console.log('requesting to add borrower');
-            const name = req.body.name;
+            const name = req.body.book_name;
             const author = req.body.author;
             const yop = req.body.yop;
             const publisher = req.body.publisher;
             const quantity= req.body.quantity;
             const avaliable = req.body.quantity;    //time of adding avaliableis same as quantity
             await db.query(
-                `insert into books (name, author, yop, publisher, quantity, avaliable) values (? ,? ,? ,? ,? ,?)`,
+                `insert into books (book_name, author, yop, publisher, quantity, avaliable) values (? ,? ,? ,? ,? ,?)`,
                 [name,author,yop,publisher,quantity,avaliable],
                 (err, result) => {
                   if (err) throw err;
@@ -131,13 +131,13 @@ class Router {
     editbook(app,db){
         app.post('/editbook',async (req,res)=>{
             console.log('requesting to edit book');
-            const id=   req.body.id;
-            const name = req.body.name;
+            const id=   req.body.book_id;
+            const name = req.body.book_name;
             const author = req.body.author;
             const yop = req.body.yop;
             const publisher = req.body.publisher;
             await db.query(
-                `update books set name=?, author=?, yop=?, publisher=?  where id=?`,
+                `update books set book_name=?, author=?, yop=?, publisher=?  where book_id=?`,
                 [name,author,yop,publisher,id],
                 (err, result) => {
                   if (err) throw err;
@@ -153,9 +153,9 @@ class Router {
     editborrower(app,db){
         app.post('/editborrower',async (req,res)=>{
             console.log('requesting to edit borrower');
-            const {id,name,address,phn}=req.body;
+            const {borrower_id:id,borrower_name:name,address,phn}=req.body;
             await db.query(
-                `update borrowers set name=(?), address=(?), phn=(?)  where id=(?)`,
+                `update borrowers set borrower_name=(?), address=(?), phn=(?)  where borrower_id=(?)`,
                 [name,address,phn,id],
                 (err, result) => {
                   if (err) throw err;

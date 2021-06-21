@@ -10,6 +10,9 @@ class Router {
         this.addbook(app,db);
         this.editbook(app,db);
         this.editborrower(app,db);
+        this.borrowrRequest(app,db);
+        this.getborrow_records(app,db);
+        this.mark_as_returnRequest(app,db);
     }
 
     login(app,db){
@@ -157,6 +160,64 @@ class Router {
             await db.query(
                 `update borrowers set borrower_name=(?), address=(?), phn=(?)  where borrower_id=(?)`,
                 [name,address,phn,id],
+                (err, result) => {
+                  if (err) throw err;
+                  //console.log(result);
+                  res.json({
+                    success:true
+                })
+                }
+              );
+            
+        })
+    }
+
+    borrowrRequest(app,db){
+        app.post('/borrowrRequest',async (req,res)=>{
+            console.log('requesting to edit borrower');
+            const {borrower_id,book_id,status,borrow_date,borrow_for}=req.body;
+            await db.query(
+                `INSERT INTO borrowings( borrow_date, return_date, status, book_id, borrower_id)
+                VALUES ( ?,adddate(?,interval ? day), ?, ?, ?);`,
+                [borrow_date,borrow_date,borrow_for,status,book_id,borrower_id],
+                (err, result) => {
+                  if (err)throw err;
+                  //console.log(result);
+                  res.json({
+                    success:true
+                })
+                }
+              );
+            
+        })
+    }
+
+    getborrow_records(app,db){
+        app.post('/getborrow_records',async (req,res)=>{
+            console.log('requesting for borrow records');
+            //let msg =[];
+            await db.query(
+                "select b.borrowing_id ,b.borrow_date,b.return_date,b.status,br.borrower_name,bk.book_name, bk.author from borrowings b,borrowers br,books bk where b.book_id=bk.book_id and b.borrower_id=br.borrower_id;",
+                (err, result) => {
+                  if (err) throw err;
+                  //console.log(result);
+                  res.json({
+                    success:true,
+                    msg: result
+                })
+                }
+              );
+            
+        })
+    }
+
+    mark_as_returnRequest(app,db){
+        app.post('/mark_as_returnRequest',async (req,res)=>{
+            console.log('requesting for mark as return request');
+            const {borrowing_id}=req.body;
+            await db.query(
+                `update borrowings set status='returned' where borrowing_id=?`,
+                [borrowing_id],
                 (err, result) => {
                   if (err) throw err;
                   //console.log(result);

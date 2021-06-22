@@ -183,11 +183,24 @@ class Router {
                 (err, result) => {
                   if (err)throw err;
                   //console.log(result);
+                //   res.json({
+                //     success:true
+                // })
+                }
+            );
+            await db.query(
+                `select b.borrowing_id ,b.borrow_date,b.return_date,b.status,
+                br.borrower_name,bk.book_name, bk.author from borrowings b,borrowers br,
+                books bk where b.book_id=bk.book_id and b.borrower_id=br.borrower_id;`,
+                (err, result) => {
+                  if (err) throw err;
+                  //console.log(result);
                   res.json({
-                    success:true
+                    success:true,
+                    msg: result
                 })
                 }
-              );
+            );
             
         })
     }
@@ -197,7 +210,9 @@ class Router {
             console.log('requesting for borrow records');
             //let msg =[];
             await db.query(
-                "select b.borrowing_id ,b.borrow_date,b.return_date,b.status,br.borrower_name,bk.book_name, bk.author from borrowings b,borrowers br,books bk where b.book_id=bk.book_id and b.borrower_id=br.borrower_id;",
+                `select b.borrowing_id ,b.borrow_date,b.return_date,b.status,
+                br.borrower_name,bk.book_name, bk.author from borrowings b,borrowers br,
+                books bk where b.book_id=bk.book_id and b.borrower_id=br.borrower_id;`,
                 (err, result) => {
                   if (err) throw err;
                   //console.log(result);
@@ -206,7 +221,7 @@ class Router {
                     msg: result
                 })
                 }
-              );
+            );
             
         })
     }

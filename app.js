@@ -36,6 +36,10 @@ app.use(session({
     }
 }));
 new Router(app,db);
+
+
+app.use(express.static(path.resolve(__dirname, './build')));
+
 //------------------------------------------
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
